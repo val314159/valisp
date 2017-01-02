@@ -1,0 +1,23 @@
+require("./xparse.js");
+require("./xprint.js");
+var rl = require("readline").
+createInterface({
+  input: process.stdin,
+  output: process.stdout
+});
+@@process_line(line){
+  println("LINE:"+str(line));
+  println("PARS:"+str(parse_expr(line)));
+  print_expr(parse_expr(line));
+}
+rl.setPrompt(":-? ");
+rl.on("line", @@(line){
+	      //  if(line)
+    process_line(line);
+  rl.prompt();
+}).on("close", @@(){
+  println("\n>> Bye!");
+  process.exit(0);
+});
+println(">> Hello!");
+rl.prompt();

@@ -1,0 +1,20 @@
+joina=@@(arr,sep){return arr.join(sep);};
+print_expr2=@@(x){
+    if(x===undefined)return"undef";
+    if(x===true)return"true";
+    if(x===false)return"false";
+    var t=typeof(x);
+    if(t==="function")return"FUNC";
+    if(t!=="object")return str(x);
+    if(typeof(x.length)!=="number") return str(x);
+    var arr=[];
+    for(var v,n=0;v=x[n],n<x.length;n++)
+        push(print_expr2(v),arr);
+    return "("+joina(arr," ")+")";
+};
+print_expr=@@(x){
+    var xx = print_expr2(x);
+    println(xx);
+    return xx;
+}
+
