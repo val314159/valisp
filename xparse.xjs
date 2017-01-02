@@ -1,0 +1,40 @@
+push=@@(item,arr){
+    arr.push(item);
+    return arr;
+};
+isws=@@(c){return " \t\r\n".indexOf(c)>-1;}
+parse_expr=@@(src){
+    var stack=[],arr=[],sym="",state=0;
+    @@popstk(){var x=stack.pop();arr=push(arr,x[0]),sym=x[1];}
+    @@popsym(){push(sym,arr),sym="";}
+    @@pushst(){push([arr,sym],stack),arr=[],sym="";}
+    for(var c,n=0,a=src;c=a[n],n<a.length;n++){
+	switch(state){
+	case 0:
+	    if/***/(c==="(") pushst();
+	    else if(c===")") popstk();
+	    else if(c==="\"")state=2,sym="s";
+	    else if(isws(c)) true;
+	    else if(true)    state=1,sym="y"+c;
+	    break;
+	case 1:
+	    if/***/(c==="(") throw "BAD CHAR:"+str(c);
+	    else if(c===")") popsym(),state=0,popstk();
+	    else if(c==="\"")popsym(),state=2,sym="s";
+	    else if(isws(c)) popsym(),state=0;
+	    else if(true)    sym+=c;
+	    break;
+	case 2:
+	    if/***/(c==="\"")popsym(),state=0;
+	    else if(c==="\\")pushst(),state=3;
+	    else if(true)    sym+=c;
+	    break;
+	case 3: sym+=c, popstk(), state=2;
+	    break;
+	default: throw "BAD STATE "+state;}
+    }
+    if(state>1)throw "BAD STATE2:"+state;
+    if(stack.length)throw "BAD LENGTH:"+stack.length;
+    if (sym) popsym();
+    return arr;
+};

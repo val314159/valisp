@@ -1,0 +1,65 @@
+require("./xparse.js");
+
+@@equal(x,y){
+  if(x===y)return true;
+  if(x==y)return true;
+  if(x.length!==y.length)return false;
+  if(typeof(x.length)!=="number")return false;
+  for(var n=0;n<x.length;n++)
+    if(!equal(x[n],y[n]))
+      return false;
+  return true;
+}
+
+@@p(src,exp){
+    var ret = parse_expr(src);
+    if(!equal(exp,ret)){
+        println([exp,ret])
+	throw "MISMATCH";
+    }
+}
+
+@@pe(src,exp){
+  try{
+    p(src,exp);
+    throw("SUCCESS MEANS FAIL");
+  }catch(e){
+    if(!equal(e,exp))
+      throw("FAIL ON FAIL");
+  }
+}
+
+@@test(){
+    p("",[]);
+    p("a",["a"]);
+    p("abc",["abc"]);
+    p("abd cef ghi",["abd","cef","ghi"]);
+    p("abd ( cef qwaszx ) ghi",["abd","cef","ghi"]);
+}
+
+@@test2(){
+ if(1){
+    p("",[]);
+    p("    ",[]);
+    p("abc    ",["yabc"]);
+    p("abc hhh jjj kkk   ",["yabc","yhhh","yjjj","ykkk"]);
+ }
+ if(1){
+    p("()  ",[[]]);
+    p("() () () ",[[],[],[]]);
+    p("(aa1 ) (bb2 ) (cd3 xx ) ",[["yaa1"],["ybb2"],["ycd3","yxx"]]);
+    p("(aa1) (bb2) (cd3 xx) ",[["yaa1"],["ybb2"],["ycd3","yxx"]]);
+ }
+ p('"hello world"',["shello world"]);
+ p('(t f nil ("hello world"))',[["yt","yf","ynil",["shello world"]]]);
+ p('(t"f" nil ("hello world"))',[["yt","sf","ynil",["shello world"]]]);
+
+ pe("\"","BAD STATE2:2")
+ pe("(","BAD LENGTH:1")
+ pe("(((qwqw www","BAD LENGTH:3")
+ p("qwqwwww",["yqwqwwww"])
+ pe("qwq(wwww)",'BAD CHAR:"("')
+
+}
+
+test2()
