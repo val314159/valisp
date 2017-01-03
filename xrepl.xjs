@@ -6,17 +6,31 @@ createInterface({
   input: process.stdin,
   output: process.stdout
 });
+@@xexec(xpr){
+    var ret = eval(xpr);
+    return ret;
+}
+qq=100;
+pl=function(x){
+  console.log(x);
+}
+@@xexecs(xprs){
+    for(var r=[],n=0;n<xprs.length;n++)
+	r.push(xexec(xprs[n]));
+    return r;
+}
 @@process_line(line){
   println("LINE:"+str(line));
   var pars = parse_expr(line);
   println("PARS:"+str(pars));
   //  print_expr(pars);
   var comp = compile_exprs(pars);
-  println("COMP:"+(comp));
+  println("COMP:"+str(comp));
+  var rslt = xexecs(comp);
+  println("RLST:"+(rslt));
 }
 rl.setPrompt(":-? ");
 rl.on("line", @@(line){
-	      //  if(line)
     process_line(line);
   rl.prompt();
 }).on("close", @@(){

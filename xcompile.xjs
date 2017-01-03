@@ -17,17 +17,19 @@ atom=@@(x){
     return true;
 }
 var C=compile_expr=@@(expr){
+    if(typeof(expr)==="string"&&expr[0]==="s") return str(cdr(expr));
+    if(typeof(expr)==="string"&&expr[0]==="y") return cdr(expr);
     if(atom(expr)) return str(expr);
     var head = car(expr);
-    var func = C.S[head];
     var params = cdr(expr);
-    if(func)
-      return func.apply(null,params);
+    var macro = C.M[head];
+    if(macro)
+      return macro.apply(null,params);
     var args = compile_args(params);
-    func = C.C[head];
+    var func = C.C[head];
     if(func)
       return func.apply(null,args);
-    return head+"("+args+")";
+    return cdr(head)+"("+args+")";
 }
 compile_args=@@(a){
     var arr=[];
@@ -35,25 +37,25 @@ compile_args=@@(a){
         push( C(a[n]), arr );
     return arr;
 }
-C.S={
+C.M={
+  "lambda2": function(a,v,b){
+  	return("L2"+str[a,v,b]);
+  },
 };
 C.C={
-  "if": function(a,b,c){
-  	return("IF");
+  yif: function(a,b,c){
+  	return("("+a+")?"+b+":"+c);
   },
-  "fn2": function(args,vars,body){
-  	return("FN2"+args+"->"+vars+"=>"+body);
+  yfn2: function(args,vars,body){
+  	return("function ("+args+"){var "+vars+";\n"+body+"}");
   },
-  "progn": function(x){
-  	return("PN");
+  yprogn: function(x){
+  	return("{}");
   },
-  "prog1": function(x){
-  	return("PN");
+  yprog1: function(x){
+  	return("{}");
   },
-  "prog2": function(x){
-  	return("PN");
-  },
-  "prog3": function(x){
-  	return("PN");
+  yprog2: function(x){
+  	return("{}");
   },
 };
