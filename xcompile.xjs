@@ -1,0 +1,59 @@
+compile_exprs=@@(tree){
+    for(var a=[],v,n=0;v=tree[n],n<tree.length;n++)
+	a.push( C(v) );
+    return a;
+}
+length=@@(x){return x.length;}
+car=@@(x){return x[0];}
+cdr=@@(x){return x.slice(1);}
+atom=@@(x){
+    if(x===undefined) return true;
+    if(x===true) return true;
+    if(x===false) return true;
+    if(typeof(x)==="string") return true;
+    if(typeof(x)==="number") return true;
+    if(typeof(x)==="object"&&
+       typeof(x.length)==="number") return false;
+    return true;
+}
+var C=compile_expr=@@(expr){
+    if(atom(expr)) return str(expr);
+    var head = car(expr);
+    var func = C.S[head];
+    var params = cdr(expr);
+    if(func)
+      return func.apply(null,params);
+    var args = compile_args(params);
+    func = C.C[head];
+    if(func)
+      return func.apply(null,args);
+    return head+"("+args+")";
+}
+compile_args=@@(a){
+    var arr=[];
+    for(var n=0;n<a.length;n++)
+        push( C(a[n]), arr );
+    return arr;
+}
+C.S={
+};
+C.C={
+  "if": function(a,b,c){
+  	return("IF");
+  },
+  "fn2": function(args,vars,body){
+  	return("FN2"+args+"->"+vars+"=>"+body);
+  },
+  "progn": function(x){
+  	return("PN");
+  },
+  "prog1": function(x){
+  	return("PN");
+  },
+  "prog2": function(x){
+  	return("PN");
+  },
+  "prog3": function(x){
+  	return("PN");
+  },
+};

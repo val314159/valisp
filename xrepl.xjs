@@ -1,5 +1,6 @@
 require("./xparse.js");
 require("./xprint.js");
+require("./xcompile.js");
 var rl = require("readline").
 createInterface({
   input: process.stdin,
@@ -7,8 +8,11 @@ createInterface({
 });
 @@process_line(line){
   println("LINE:"+str(line));
-  println("PARS:"+str(parse_expr(line)));
-  print_expr(parse_expr(line));
+  var pars = parse_expr(line);
+  println("PARS:"+str(pars));
+  //  print_expr(pars);
+  var comp = compile_exprs(pars);
+  println("COMP:"+(comp));
 }
 rl.setPrompt(":-? ");
 rl.on("line", @@(line){

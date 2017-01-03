@@ -1,0 +1,26 @@
+joina=@@(arr,sep){return arr.join(sep);};
+length=@@(x){return x.length;}
+car=@@(x){return x[0];}
+cdr=@@(x){return x.slice(1);}
+atom=@@(x){
+    if(x===undefined) return true;
+    if(x===true) return true;
+    if(x===false) return true;
+    if(typeof(expr)==="string") return true;
+    if(typeof(expr)==="number") return true;
+    if(typeof(expr)==="object"&&
+       typeof(expr.length)==="number") return false;
+    return true;
+}
+list=@@(){
+  var arr=[];
+  for(var n=0;n<arguments.length;n++){
+    push(arguments[n], arr);
+  }
+  return arr;
+}
+push=@@(item,arr){
+    arr.push(item);
+    return arr;
+};
+isws=@@(c){return " \t\r\n".indexOf(c)>-1;}
